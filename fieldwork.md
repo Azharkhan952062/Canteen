@@ -5,7 +5,7 @@
 - **Visit Date:** 17 November 2026
 - **Location:** Campus Canteen
 - **Staff Member Interviewed:** Rahul
-- **Role:** Canteen Counter Staff (manages orders and counter ledger)
+- **Role:** Canteen Counter Staff (manages customer orders, payments, and counter ledger)
 
 ---
 
@@ -23,10 +23,10 @@ The photographs below were captured in-person during the on-site visit to the ca
 During the in-person discussion at the canteen counter, Rahul explained the daily operational workflow and shared these confirmed points:
 
 1. **High Popularity of Biryani:** Biryani is the most popular food item in the canteen and drives a substantial portion of customer demand.
-2. **Over-Preparation Beyond Demand:** In the morning, the kitchen sometimes prepares more Biryani than customers actually purchase during the day.
-3. **Incomplete Daily Sales:** On some operating days, the prepared Biryani does not sell out completely.
-4. **Food Spoilage & Financial Loss:** Unsold Biryani has a short shelf life and cannot be carried over indefinitely; when demand drops, leftover portions spoil, resulting directly in food wastage and financial loss for the canteen.
-5. **Secondary Focus Item (Chicken Roll):** Chicken Roll is another regular prepared food item served at the counter, also requiring balanced daily cooking decisions.
+2. **Over-Preparation Beyond Demand:** In the morning, the kitchen staff often prepare more Biryani portions than customers actually purchase during the day.
+3. **Incomplete Daily Sales:** On multiple operating days, the prepared Biryani fails to sell out completely before closing time.
+4. **Food Spoilage & Financial Loss:** Unsold Biryani has a short shelf life and cannot be safely preserved for long periods; when demand drops, leftover portions spoil, directly creating avoidable food wastage and monetary losses for the canteen.
+5. **Secondary Focus Item (Chicken Roll):** Chicken Roll is another regular cooked food item served at the counter, which also requires balanced daily cooking decisions to avoid wastage.
 
 ### Confirmed Menu Prices:
 - **Biryani Half:** ₹90 per portion
@@ -41,13 +41,13 @@ During the in-person discussion at the canteen counter, Rahul explained the dail
 ---
 
 ## 5. Field Observation
-- **Surprising Operational Finding:** Despite Biryani being the single most popular dish on the menu, daily customer turnout varies sufficiently that substantial quantities of prepared Biryani still end up unsold on slower days and risk immediate spoilage. Without historical sales tracking at the counter, morning preparation quantities relied on guesswork rather than data.
+- **Surprising Operational Finding:** Despite Biryani being the single most popular and requested dish on the canteen menu, customer turnout fluctuates enough that notable quantities of prepared Biryani still end up unsold on slower days and risk immediate spoilage. Counter staff previously had no analytical mechanism to review past sales averages, causing daily morning cooking targets to rely entirely on guesswork.
 
 ---
 
 ## 6. Observation and Data Collection Methodology
-- **On-Site Observation:** Direct counter observation of student footfall, physical ordering, and manual book logging by counter staff.
-- **Staff Interaction:** Structured conversation with Rahul at the counter regarding daily batch preparation and evening unsold stock handling.
+- **On-Site Observation:** Direct observation at the counter during peak operating hours, examining student footfall, physical order placement, and the handwritten book-logging process conducted by Rahul.
+- **Staff Interaction:** Structured conversation with Rahul at the counter regarding daily batch preparation schedules, evening inventory reconciliation, and unsold food disposal.
 - **Operational Dataset:** 30 consecutive daily operational records covering 10 operating days (2026-11-01 to 2026-11-10) for Biryani Half, Biryani Full, and Chicken Roll.
 - **Core Formula:**
   $$\text{Quantity\_Remaining} = \text{Quantity\_Prepared} - \text{Quantity\_Sold}$$

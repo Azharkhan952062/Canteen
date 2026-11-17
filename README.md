@@ -6,7 +6,7 @@ A practical, data-driven software tool designed to help a campus canteen monitor
 - **Field Visit Date:** 17 November 2026
 - **Location:** Campus Canteen
 - **Staff Consulted:** Rahul (Canteen Counter Staff)
-- **GitHub Repository:** [https://github.com/Azharkhan952062/Canteen](https://github.com/Azharkhan952062/Canteen)
+- **GitHub Repository:** https://github.com/Azharkhan952062/Canteen
 
 ---
 
@@ -14,7 +14,7 @@ A practical, data-driven software tool designed to help a campus canteen monitor
 
 The photographs below were captured during an on-site field visit to the campus canteen. They provide authentic evidence of the operational setting, counter setup, and handwritten ledger recording.
 
-| Evidence 1: Physical Logging at Counter | Evidence 2: Ordering Counter & Interaction |
+| Evidence Photo 1: Physical Logging at Counter | Evidence Photo 2: Ordering Counter & Interaction |
 | :---: | :---: |
 | ![Counter Logging](assets/canteen_fieldwork_1.jpg) | ![Ordering Counter](assets/canteen_fieldwork_2.jpg) |
 | *Rahul recording daily transactions and customer orders manually at the counter.* | *Customer counter and beverage cooling unit.* |
