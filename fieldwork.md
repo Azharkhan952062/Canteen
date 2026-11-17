@@ -12,10 +12,10 @@
 ## 2. Authentic Photographic Evidence
 The photographs below were captured in-person during the on-site visit to the campus canteen. They are preserved byte-for-byte in the `assets/` directory without any modification, enhancement, or synthetic regeneration.
 
-| Evidence Photo 1: Counter & Record Book | Evidence Photo 2: Counter Interaction & Cooler |
+| Figure 1: Discussion with the canteen owner regarding food demand and unsold Biryani | Figure 2: Canteen register observed after the discussion |
 | :---: | :---: |
-| ![Counter & Record Book](assets/canteen_fieldwork_1.jpg) | ![Counter Interaction & Cooler](assets/canteen_fieldwork_2.jpg) |
-| *Rahul recording daily transactions and customer orders manually at the counter.* | *Canteen ordering counter and beverage cooler during operating hours.* |
+| ![Discussion with the canteen owner](assets/canteen_fieldwork_2.jpg) | ![Canteen register observed after the discussion](assets/canteen_fieldwork_1.jpg) |
+| *Figure 1: Discussion with the canteen owner regarding food demand and unsold Biryani.* | *Figure 2: Canteen register observed after the discussion.* |
 
 ---
 

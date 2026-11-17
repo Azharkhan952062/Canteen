@@ -14,10 +14,10 @@ A practical, data-driven software tool designed to help a campus canteen monitor
 
 The photographs below were captured during an on-site field visit to the campus canteen. They provide authentic evidence of the operational setting, counter setup, and handwritten ledger recording.
 
-| Evidence Photo 1: Physical Logging at Counter | Evidence Photo 2: Ordering Counter & Interaction |
+| Figure 1: Discussion with the canteen owner regarding food demand and unsold Biryani | Figure 2: Canteen register observed after the discussion |
 | :---: | :---: |
-| ![Counter Logging](assets/canteen_fieldwork_1.jpg) | ![Ordering Counter](assets/canteen_fieldwork_2.jpg) |
-| *Rahul recording daily transactions and customer orders manually at the counter.* | *Customer counter and beverage cooling unit.* |
+| ![Discussion with the canteen owner](assets/canteen_fieldwork_2.jpg) | ![Canteen register observed after the discussion](assets/canteen_fieldwork_1.jpg) |
+| *Figure 1: Discussion with the canteen owner regarding food demand and unsold Biryani.* | *Figure 2: Canteen register observed after the discussion.* |
 
 ---
 
