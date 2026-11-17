@@ -1,18 +1,16 @@
-# Student Reflection
+# Student Project Reflection
 
-*(Note: This is an empty template reserved for the student's personal reflections on the fieldwork experience, technical challenges, and learnings. To preserve academic authenticity, no reflections have been auto-generated or fabricated.)*
+## 1. Fieldwork Experience
+Insights and practical understanding gained from conducting direct on-site observation and interviewing counter staff at the campus canteen.
 
-## 1. Fieldwork Experience & Interaction with Canteen Staff
-- 
+## 2. Real-World Constraints Observed
+Understanding the operational realities of small food businesses, including food perishability, daily customer footfall variation, and the reliance on handwritten paper records.
 
-## 2. On-Site Challenges Encountered
-- 
+## 3. Technical Implementation Insights
+Learnings from designing a practical data-driven application using Python, Pandas, Matplotlib, and Streamlit that addresses a specific operational problem without unnecessary complexity.
 
-## 3. Real-World Problem Solving Insights
-- 
+## 4. Evaluation of Solution Impact
+How historical demand aggregation and unsold food tracking can practically help canteen staff balance daily preparation and reduce food wastage.
 
-## 4. Software Development Learnings & Skills Acquired
-- 
-
-## 5. Potential Future Improvements for the Canteen
-- 
+## 5. Potential Future Extensions
+Practical enhancements that could be explored over time, such as tracking weather or campus schedule events to further refine demand estimation.
