@@ -1,25 +1,20 @@
 import os
 import tempfile
-# Ensure Matplotlib uses a valid writable temporary cache directory on Windows
-os.environ.setdefault('MPLCONFIGDIR', tempfile.gettempdir())
-
+import datetime
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import datetime
 
-# ---------------------------------------------------------
-# Page Configuration & Styling
-# ---------------------------------------------------------
+# Ensure Matplotlib uses a writable temporary cache directory on Windows
+os.environ.setdefault('MPLCONFIGDIR', tempfile.gettempdir())
+
+# Page configuration
 st.set_page_config(
     page_title="Canteen Food Demand & Waste Tracker",
     page_icon="🍛",
     layout="wide"
 )
 
-# ---------------------------------------------------------
-# Constants & Helper Functions
-# ---------------------------------------------------------
 DATA_COLUMNS = [
     "Date",
     "Food_Item",
@@ -32,23 +27,20 @@ DATA_COLUMNS = [
 DATA_PATH = "data.csv"
 
 def load_data(filepath_or_buffer):
-    """
-    Loads data from CSV, validates column names,
-    and returns a pandas DataFrame.
-    """
+    """Load data from CSV file and sanitize column headers."""
     try:
         df = pd.read_csv(filepath_or_buffer)
-        df.columns = [c.strip() for c in df.columns]
+        df.columns = [col.strip() for col in df.columns]
         return df
-    except Exception as e:
-        st.error(f"Error loading file: {e}")
+    except Exception as error:
+        st.error(f"Error loading data file: {error}")
         return pd.DataFrame(columns=DATA_COLUMNS)
 
 def validate_and_clean_data(df):
     """
-    Validates records, ensures proper data types,
-    calculates Quantity_Remaining = Quantity_Prepared - Quantity_Sold,
-    and returns cleaned data along with any validation warnings.
+    Validate data structure, cast numerical fields, and calculate:
+    - Quantity_Remaining = Quantity_Prepared - Quantity_Sold
+    - Revenue = Quantity_Sold * Selling_Price
     """
     warnings = []
     
@@ -60,21 +52,17 @@ def validate_and_clean_data(df):
         warnings.append(f"Missing required column(s): {', '.join(missing_cols)}")
         return df, warnings
 
-    cleaned_df = df.copy()
-    cleaned_df = cleaned_df.dropna(how='all')
+    cleaned_df = df.copy().dropna(how='all')
 
-    # Convert numeric fields safely
     numeric_cols = ["Quantity_Prepared", "Quantity_Sold", "Selling_Price"]
     for col in numeric_cols:
         cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce').fillna(0)
 
-    # Calculate remaining quantity: Prepared - Sold
+    # Derived business metrics
     cleaned_df["Quantity_Remaining"] = cleaned_df["Quantity_Prepared"] - cleaned_df["Quantity_Sold"]
-
-    # Calculate Revenue for each record
     cleaned_df["Revenue"] = cleaned_df["Quantity_Sold"] * cleaned_df["Selling_Price"]
 
-    # Check for potential data anomalies
+    # Integrity checks for data anomalies
     sold_exceeds_prep = cleaned_df[cleaned_df["Quantity_Sold"] > cleaned_df["Quantity_Prepared"]]
     if not sold_exceeds_prep.empty:
         warnings.append(f"{len(sold_exceeds_prep)} record(s) where Quantity Sold exceeds Quantity Prepared.")
@@ -83,20 +71,16 @@ def validate_and_clean_data(df):
     if not negatives.empty:
         warnings.append(f"{len(negatives)} record(s) contain negative quantity values.")
 
-    # Convert Date column for sorting and charting
     cleaned_df["Date"] = pd.to_datetime(cleaned_df["Date"], errors='coerce')
     invalid_dates = cleaned_df[cleaned_df["Date"].isna()]
     if not invalid_dates.empty:
         warnings.append(f"{len(invalid_dates)} record(s) have unparseable dates.")
 
     cleaned_df = cleaned_df.sort_values(by=["Date", "Food_Item"], ascending=True)
-
     return cleaned_df, warnings
 
 def append_record(date, item, prepared, sold, price, filepath=DATA_PATH):
-    """
-    Appends a new verified record to data.csv.
-    """
+    """Append a newly observed daily operational record to data.csv."""
     remaining = prepared - sold
     new_row = pd.DataFrame([{
         "Date": date.strftime("%Y-%m-%d"),
@@ -112,9 +96,7 @@ def append_record(date, item, prepared, sold, price, filepath=DATA_PATH):
     else:
         new_row.to_csv(filepath, mode='a', header=False, index=False, columns=DATA_COLUMNS)
 
-# ---------------------------------------------------------
-# Sidebar: Data Source & Context
-# ---------------------------------------------------------
+# Sidebar controls
 st.sidebar.title("🍱 Canteen Tracker")
 st.sidebar.caption("Fieldwork Problem-Solving Tool")
 
@@ -143,41 +125,31 @@ st.sidebar.info(
     """
 )
 
-# ---------------------------------------------------------
-# Load and Validate Data
-# ---------------------------------------------------------
+# Load selected dataset
 if source_choice == "Primary Dataset (data.csv)":
     raw_df = load_data(DATA_PATH)
 else:
-    if uploaded_file is not None:
-        raw_df = load_data(uploaded_file)
-    else:
-        raw_df = pd.DataFrame(columns=DATA_COLUMNS)
+    raw_df = load_data(uploaded_file) if uploaded_file is not None else pd.DataFrame(columns=DATA_COLUMNS)
 
 df, validation_warnings = validate_and_clean_data(raw_df)
 
-# ---------------------------------------------------------
-# Main Header
-# ---------------------------------------------------------
+# Application Header
 st.title("🍛 Canteen Food Demand & Waste Tracker")
 st.markdown(
     "*A practical analytics tool helping campus canteen owners understand customer demand patterns, "
     "monitor unsold stock, and plan daily food preparation to minimize waste.*"
 )
 
-# Display Validation Warnings if any
 if validation_warnings:
     with st.expander("⚠️ Data Validation Notices", expanded=False):
-        for w in validation_warnings:
-            st.warning(w)
+        for warning in validation_warnings:
+            st.warning(warning)
 
 if df.empty:
-    st.error("No records loaded. Please check that `data.csv` exists or upload a valid CSV file.")
+    st.error("No records loaded. Please verify that `data.csv` exists or upload a valid CSV file.")
     st.stop()
 
-# ---------------------------------------------------------
-# Navigation Tabs
-# ---------------------------------------------------------
+# Feature tabs
 tab_overview, tab_demand, tab_waste, tab_planning, tab_management = st.tabs([
     "📊 Dashboard",
     "📈 Food Demand Analysis",
@@ -186,9 +158,7 @@ tab_overview, tab_demand, tab_waste, tab_planning, tab_management = st.tabs([
     "📁 Data Management & Entry"
 ])
 
-# ---------------------------------------------------------
-# TAB 1: DASHBOARD
-# ---------------------------------------------------------
+# Tab 1: Executive Dashboard
 with tab_overview:
     st.header("Executive Summary")
     st.caption("Aggregated totals and high-level performance metrics across all collected records.")
@@ -199,7 +169,6 @@ with tab_overview:
     total_revenue = float(df["Revenue"].sum())
     unsold_percentage = (total_remaining / total_prepared * 100) if total_prepared > 0 else 0.0
 
-    # Top Metric Cards
     col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
     col_m1.metric("Total Prepared", f"{total_prepared} units")
     col_m2.metric("Total Sold", f"{total_sold} units")
@@ -210,7 +179,6 @@ with tab_overview:
     st.markdown("---")
     st.subheader("Item-Wise Sales & Revenue Summary")
 
-    # Group by Food Item
     item_summary = df.groupby("Food_Item").agg(
         Prepared=("Quantity_Prepared", "sum"),
         Sold=("Quantity_Sold", "sum"),
@@ -223,7 +191,6 @@ with tab_overview:
 
     c_bhalf, c_bfull, c_roll = st.columns(3)
     
-    # Biryani Half Card
     bh_row = item_summary[item_summary["Food_Item"] == "Biryani Half"]
     with c_bhalf:
         st.markdown("#### 🍚 Biryani Half (₹90)")
@@ -235,7 +202,6 @@ with tab_overview:
             st.write(f"- **Prepared:** {int(bh_row['Prepared'].values[0])} portions")
             st.write(f"- **Remaining:** {rem_bh} portions ({bh_row['Unsold %'].values[0]}%)")
 
-    # Biryani Full Card
     bf_row = item_summary[item_summary["Food_Item"] == "Biryani Full"]
     with c_bfull:
         st.markdown("#### 🍲 Biryani Full (₹150)")
@@ -247,7 +213,6 @@ with tab_overview:
             st.write(f"- **Prepared:** {int(bf_row['Prepared'].values[0])} portions")
             st.write(f"- **Remaining:** {rem_bf} portions ({bf_row['Unsold %'].values[0]}%)")
 
-    # Chicken Roll Card
     cr_row = item_summary[item_summary["Food_Item"] == "Chicken Roll"]
     with c_roll:
         st.markdown("#### 🌯 Chicken Roll (₹60)")
@@ -259,14 +224,11 @@ with tab_overview:
             st.write(f"- **Prepared:** {int(cr_row['Prepared'].values[0])} units")
             st.write(f"- **Remaining:** {rem_cr} units ({cr_row['Unsold %'].values[0]}%)")
 
-# ---------------------------------------------------------
-# TAB 2: FOOD DEMAND ANALYSIS
-# ---------------------------------------------------------
+# Tab 2: Food Demand Analysis
 with tab_demand:
     st.header("Food Demand Analysis")
     st.caption("Comparison of sales volume and daily demand trends across all tracked menu items.")
 
-    # Identify most sold item
     top_item_row = item_summary.sort_values(by="Sold", ascending=False).iloc[0]
     st.success(
         f"🏆 **Highest Demand Item:** **{top_item_row['Food_Item']}** with **{int(top_item_row['Sold'])}** units sold "
@@ -276,7 +238,6 @@ with tab_demand:
     st.markdown("---")
     st.subheader("Daily Sales Trends (Combined Comparison)")
 
-    # Pivot table for line chart
     pivot_sold = df.pivot_table(
         index=df["Date"].dt.strftime("%Y-%m-%d"),
         columns="Food_Item",
@@ -312,7 +273,7 @@ with tab_demand:
     chart_col1, chart_col2, chart_col3 = st.columns(3)
     items_list = ["Biryani Half", "Biryani Full", "Chicken Roll"]
 
-    for idx, (target_item, target_col) in enumerate(zip(items_list, [chart_col1, chart_col2, chart_col3])):
+    for target_item, target_col in zip(items_list, [chart_col1, chart_col2, chart_col3]):
         with target_col:
             sub_df = df[df["Food_Item"] == target_item].copy()
             sub_df["DateStr"] = sub_df["Date"].dt.strftime("%d %b")
@@ -328,14 +289,11 @@ with tab_demand:
             plt.tight_layout()
             st.pyplot(fig_sub)
 
-# ---------------------------------------------------------
-# TAB 3: FOOD WASTE ANALYSIS
-# ---------------------------------------------------------
+# Tab 3: Food Waste Analysis
 with tab_waste:
     st.header("Food Waste & Unsold Stock Analysis")
     st.caption("Monitoring unsold food quantities, identifying peak over-preparation days, and tracking waste trends.")
 
-    # Important Academic / Practical Note
     st.info(
         "💡 **Fieldwork Observation Note on Spoilage vs. Remaining:**\n\n"
         "This tool distinguishes between **remaining unsold food** at closing time and **confirmed spoiled food**. "
@@ -368,7 +326,6 @@ with tab_waste:
 
     with w_col2:
         st.subheader("Days with Highest Unsold Food")
-        # Identify top dates by total remaining food
         daily_waste = df.groupby(df["Date"].dt.strftime("%Y-%m-%d")).agg(
             Prepared=("Quantity_Prepared", "sum"),
             Sold=("Quantity_Sold", "sum"),
@@ -384,9 +341,7 @@ with tab_waste:
                 f"- **Prepared:** {int(row['Prepared'])} | **Sold:** {int(row['Sold'])}"
             )
 
-# ---------------------------------------------------------
-# TAB 4: PREPARATION PLANNING
-# ---------------------------------------------------------
+# Tab 4: Preparation Planning
 with tab_planning:
     st.header("Daily Preparation Planning & Guidance")
     st.caption("Statistical estimation to guide morning food preparation based on historical sales.")
@@ -399,20 +354,16 @@ with tab_planning:
     )
 
     distinct_days = df["Date"].nunique()
-
     plan_c1, plan_c2, plan_c3 = st.columns(3)
 
     for target_item, col_target in zip(["Biryani Half", "Biryani Full", "Chicken Roll"], [plan_c1, plan_c2, plan_c3]):
         with col_target:
             item_df = df[df["Food_Item"] == target_item]
             sales = item_df["Quantity_Sold"]
-            prep = item_df["Quantity_Prepared"]
             
             avg_sold = sales.mean() if not sales.empty else 0
             min_sold = sales.min() if not sales.empty else 0
             max_sold = sales.max() if not sales.empty else 0
-            
-            # Practical suggestion: average demand rounded up
             suggested_prep = round(avg_sold)
 
             st.markdown(f"### {target_item}")
@@ -432,9 +383,7 @@ with tab_planning:
         "The canteen owner should use these numbers as a reference rather than an absolute rule."
     )
 
-# ---------------------------------------------------------
-# TAB 5: DATA MANAGEMENT & RECORD ENTRY
-# ---------------------------------------------------------
+# Tab 5: Data Management & Entry
 with tab_management:
     st.header("Data Management")
     st.caption("Inspect verified records, export data, or record a new daily observation.")
@@ -445,16 +394,19 @@ with tab_management:
         st.subheader("Current Dataset Records")
         st.write(f"Total Records: **{len(df)}** entries across **{distinct_days}** operating days.")
         
-        # Display formatted table
         display_df = df.copy()
         display_df["Date"] = display_df["Date"].dt.strftime("%Y-%m-%d")
-        st.dataframe(display_df[[
-            "Date", "Food_Item", "Quantity_Prepared", "Quantity_Sold", "Quantity_Remaining", "Selling_Price", "Revenue"
-        ]], use_container_width=True)
+        st.dataframe(
+            display_df[[
+                "Date", "Food_Item", "Quantity_Prepared", "Quantity_Sold", 
+                "Quantity_Remaining", "Selling_Price", "Revenue"
+            ]],
+            use_container_width=True
+        )
 
-        # Download button
         csv_export = display_df[[
-            "Date", "Food_Item", "Quantity_Prepared", "Quantity_Sold", "Quantity_Remaining", "Selling_Price"
+            "Date", "Food_Item", "Quantity_Prepared", "Quantity_Sold", 
+            "Quantity_Remaining", "Selling_Price"
         ]].to_csv(index=False).encode('utf-8')
 
         st.download_button(
