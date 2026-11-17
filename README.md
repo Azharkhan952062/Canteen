@@ -148,5 +148,5 @@ Based on the 30 consecutive canteen records provided (2026-11-01 to 2026-11-10):
 
 ## 🔗 Project Links
 
-- **GitHub Repository:** `[Insert GitHub Repository Link Here]`
+- **GitHub Repository:** [https://github.com/Azharkhan952062/Canteen](https://github.com/Azharkhan952062/Canteen)
 - **3-Minute Demonstration Video:** `[Insert Video Demonstration Link Here]`
